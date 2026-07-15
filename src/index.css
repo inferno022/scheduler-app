@@ -179,7 +179,7 @@ input, textarea, select {
   cursor: pointer;
   opacity: 0.7;
 }
-.icon-btn:hover {
+.icon-btn:active {
   opacity: 1;
   background: rgba(0,0,0,0.4);
 }
@@ -217,8 +217,9 @@ input, textarea, select {
   cursor: pointer;
   transition: all 0.3s;
 }
-.fab-button:hover {
-  transform: scale(1.05);
+.fab-button:active {
+  transform: scale(0.92);
+  opacity: 0.85;
 }
 
 /* Bottom Nav */
@@ -244,8 +245,9 @@ input, textarea, select {
 .nav-item.active {
   color: var(--color-yellow);
 }
-.nav-item:hover {
+.nav-item:active {
   color: #fff;
+  transform: scale(0.95);
 }
 
 /* Modal */
@@ -340,8 +342,9 @@ input, textarea, select {
   font-size: 1rem;
   transition: opacity 0.3s;
 }
-.modal-actions button:hover {
-  opacity: 0.8;
+.modal-actions button:active {
+  opacity: 0.7;
+  transform: scale(0.95);
 }
 .btn-cancel {
   background: transparent;
@@ -468,7 +471,7 @@ input, textarea, select {
 .settings-subtitle { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--fab-color); margin-bottom: 0.5rem; }
 .settings-item { background: var(--bg-card); padding: 1.25rem; border-radius: 16px; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s; }
 .settings-item.clickable { cursor: pointer; }
-.settings-item.clickable:hover { transform: scale(0.98); background: rgba(255,255,255,0.05); }
+.settings-item.clickable:active { transform: scale(0.96); background: rgba(255,255,255,0.08); }
 .settings-item.danger { color: var(--color-red); }
 .settings-item.danger .settings-label { color: var(--color-red); }
 .settings-info { display: flex; flex-direction: column; gap: 0.25rem; }
@@ -483,3 +486,159 @@ input, textarea, select {
 .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
 input:checked + .slider { background-color: var(--fab-color); }
 input:checked + .slider:before { transform: translateX(22px); }
+
+/* Focus Mode */
+.focus-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding-top: 1rem;
+}
+.focus-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+}
+.mode-toggle {
+  display: flex;
+  background: rgba(255,255,255,0.05);
+  border-radius: 20px;
+  padding: 0.25rem;
+}
+.mode-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  padding: 0.5rem 1.5rem;
+  border-radius: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.mode-btn.active {
+  background: var(--bg-card);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+.active-task-display {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.task-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(59, 130, 246, 0.15);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  padding: 0.75rem 1.25rem;
+  border-radius: 24px;
+}
+.task-pill.empty {
+  background: rgba(255,255,255,0.05);
+  border-color: transparent;
+  color: var(--text-secondary);
+}
+.task-pill-label {
+  font-size: 0.8rem;
+  color: var(--color-blue);
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.task-pill-title {
+  font-weight: 500;
+}
+.timer-display-wrapper {
+  position: relative;
+  width: 280px;
+  height: 280px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.timer-circle {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.progress-ring {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+.progress-ring-circle {
+  fill: transparent;
+  stroke-width: 4;
+}
+.progress-ring-circle.bg {
+  stroke: rgba(255,255,255,0.05);
+}
+.progress-ring-circle.fg {
+  stroke: var(--fab-color);
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1s linear, stroke 0.3s ease;
+}
+.timer-circle.break .progress-ring-circle.fg {
+  stroke: var(--color-green);
+}
+.timer-text {
+  font-size: 4rem;
+  font-weight: 700;
+  letter-spacing: -0.05em;
+  font-variant-numeric: tabular-nums;
+}
+.timer-status {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.timer-circle.work .timer-status { color: var(--fab-color); }
+.timer-circle.break .timer-status { color: var(--color-green); }
+
+.timer-controls {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+.control-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.control-btn:active {
+  transform: scale(0.92);
+}
+.control-btn.secondary {
+  width: 50px;
+  height: 50px;
+  background: rgba(255,255,255,0.05);
+  color: #fff;
+}
+.control-btn.primary {
+  width: 72px;
+  height: 72px;
+  background: var(--text-primary);
+  color: #000;
+}
+.timer-circle.work ~ .timer-controls .control-btn.primary {
+  background: var(--fab-color);
+  color: #fff;
+}
+.timer-circle.break ~ .timer-controls .control-btn.primary {
+  background: var(--color-green);
+  color: #fff;
+}

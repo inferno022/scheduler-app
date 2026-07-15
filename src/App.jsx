@@ -6,8 +6,11 @@ import EventModal from './components/EventModal';
 import BottomNav from './components/BottomNav';
 import Analytics from './components/Analytics';
 import Settings from './components/Settings';
+import FocusMode from './components/FocusMode';
 import { getLocalDateStr } from './utils/dateUtils';
 import { useAlarms } from './hooks/useAlarms';
+import { StatusBar, Style } from '@capacitor/status-bar';
+import { SplashScreen } from '@capacitor/splash-screen';
 
 function App() {
   const [activeTab, setActiveTab] = useState('home');
@@ -27,24 +30,24 @@ function App() {
   
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTask, setEditingTask] = useState(null);
-  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [activeFocusTask, setActiveFocusTask] = useState(null);
 
+  // Initialize Native Android Elements
   useEffect(() => {
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      setDeferredPrompt(e);
-    });
+    const initNativeApp = async () => {
+      try {
+        // Make the Android status bar dark to match our app
+        await StatusBar.setStyle({ style: Style.Dark });
+        await StatusBar.setBackgroundColor({ color: '#000000' });
+        
+        // Hide the splash screen only AFTER the app has fully rendered to prevent black flashes/glitches
+        await SplashScreen.hide();
+      } catch (e) {
+        // Not running natively (e.g., in a browser), silently ignore
+      }
+    };
+    initNativeApp();
   }, []);
-
-  const handleInstallClick = () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      deferredPrompt.userChoice.then(() => {
-        setDeferredPrompt(null);
-      });
-    }
-  };
-
   // Sync to localStorage
   useEffect(() => {
     localStorage.setItem('scheduler_tasks', JSON.stringify(tasks));
@@ -114,12 +117,7 @@ function App() {
     <div className={`app-container ${oledMode ? 'oled-mode' : ''} accent-${accentColor}`}>
       <div className="main-content">
         
-        {deferredPrompt && (
-          <div style={{ backgroundColor: 'var(--fab-color)', color: '#fff', padding: '0.75rem 1rem', borderRadius: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexShrink: 0 }}>
-            <span style={{ fontSize: '0.9rem', fontWeight: 500 }}>Install App to Home Screen</span>
-            <button onClick={handleInstallClick} style={{ background: '#fff', color: '#000', border: 'none', padding: '0.5rem 1rem', borderRadius: '8px', fontWeight: 600, cursor: 'pointer' }}>Install</button>
-          </div>
-        )}
+        {/* Native app: No install prompts needed */}
 
         {activeTab === 'home' && (
           <>
@@ -151,9 +149,11 @@ function App() {
               onDelete={handleDeleteEvent}
               onToggle={handleToggleComplete}
               onEditClick={(task) => { setEditingTask(task); setIsModalOpen(true); }}
+              onFocusClick={(task) => { setActiveFocusTask(task); setActiveTab('focus'); }}
             />
           </>
         )}
+        {activeTab === 'focus' && <FocusMode activeTask={activeFocusTask} />}
         {activeTab === 'analytics' && <Analytics tasks={tasks} logs={logs} />}
         {activeTab === 'profile' && (
           <Settings 

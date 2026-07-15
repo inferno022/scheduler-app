@@ -13,6 +13,15 @@ function BottomNav({ activeTab, onTabChange }) {
         </svg>
       </div>
       <div 
+        className={`nav-item ${activeTab === 'focus' ? 'active' : ''}`}
+        onClick={() => onTabChange('focus')}
+      >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+      </div>
+      <div 
         className={`nav-item ${activeTab === 'analytics' ? 'active' : ''}`}
         onClick={() => onTabChange('analytics')}
       >

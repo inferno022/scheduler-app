@@ -1,7 +1,7 @@
 import React from 'react';
-import { getLocalDateStr } from '../utils/dateUtils';
+import { getLocalDateStr, calculateStreak } from '../utils/dateUtils';
 
-function ScheduleList({ tasks, logs, currentDateKey, onDelete, onToggle, onEditClick }) {
+function ScheduleList({ tasks, logs, currentDateKey, onDelete, onToggle, onEditClick, onFocusClick }) {
   if (tasks.length === 0) {
     return <div className="empty-state">No events here. Tap + to add one.</div>;
   }
@@ -54,6 +54,11 @@ function ScheduleList({ tasks, logs, currentDateKey, onDelete, onToggle, onEditC
             }
           }
         }
+        
+        let streakCount = 0;
+        if (task.type === 'daily') {
+          streakCount = calculateStreak(task.id, logs);
+        }
 
         return (
           <div 
@@ -87,12 +92,29 @@ function ScheduleList({ tasks, logs, currentDateKey, onDelete, onToggle, onEditC
                   {task.endTime ? ` - ${formatTime(task.endTime)}` : ''} 
                   {task.type === 'daily' ? ' 🔁' : ''}
                 </span>
-                <h3 className="event-title" style={{ textDecoration: isCompleted ? 'line-through' : 'none' }}>
-                  {task.title}
-                </h3>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <h3 className="event-title" style={{ textDecoration: isCompleted ? 'line-through' : 'none' }}>
+                    {task.title}
+                  </h3>
+                  {streakCount > 0 && (
+                    <span style={{ fontSize: '0.8rem', fontWeight: 600, background: 'rgba(255,255,255,0.15)', padding: '2px 8px', borderRadius: '12px' }}>
+                      🔥 {streakCount}
+                    </span>
+                  )}
+                </div>
               </div>
 
               <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                <button 
+                  className="icon-btn" 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onFocusClick(task);
+                  }}
+                  title="Focus mode"
+                >
+                  ▶️
+                </button>
                 <button 
                   className="icon-btn" 
                   onClick={(e) => {
