@@ -40,6 +40,7 @@ function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTask, setEditingTask] = useState(null);
   const [activeFocusTask, setActiveFocusTask] = useState(null);
+  const [isFocusLocked, setIsFocusLocked] = useState(false);
 
   // Initialize Native Android Elements
   useEffect(() => {
@@ -176,8 +177,8 @@ function App() {
             />
           </>
         )}
-        {activeTab === 'focus' && <FocusMode activeTask={activeFocusTask} />}
-        {activeTab === 'analytics' && <Analytics tasks={tasks} logs={logs} />}
+        {activeTab === 'focus' && <FocusMode activeTask={activeFocusTask} onLockdownChange={setIsFocusLocked} />}
+        {activeTab === 'analytics' && !isFocusLocked && <Analytics tasks={tasks} logs={logs} />}
         {activeTab === 'profile' && (
           <Settings 
             oledMode={oledMode}
@@ -191,7 +192,7 @@ function App() {
         )}
       </div>
       
-      <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
+      {!isFocusLocked && <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />}
       
       <EventModal 
         isOpen={isModalOpen} 
