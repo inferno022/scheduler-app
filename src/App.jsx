@@ -20,13 +20,21 @@ function App() {
   
   // Initialize from localStorage instead of backend
   const [tasks, setTasks] = useState(() => {
-    const saved = localStorage.getItem('scheduler_tasks');
-    return saved ? JSON.parse(saved) : [];
+    try {
+      const saved = localStorage.getItem('scheduler_tasks');
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) {
+      return [];
+    }
   });
   
   const [logs, setLogs] = useState(() => {
-    const saved = localStorage.getItem('scheduler_logs');
-    return saved ? JSON.parse(saved) : [];
+    try {
+      const saved = localStorage.getItem('scheduler_logs');
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) {
+      return [];
+    }
   });
   
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -44,17 +52,21 @@ function App() {
         // Play the custom startup sound
         try {
           const audio = new Audio(startupSoundUrl);
-          audio.play();
+          audio.play().catch(e => console.warn('Audio play promise rejected', e));
         } catch (audioErr) {
           console.warn('Audio playback prevented by OS', audioErr);
         }
-
+      } catch (e) {
+        // Not running natively or plugin failed, silently ignore
+        console.warn('Native init failed:', e);
+      } finally {
+        // GUARANTEE the splash screen hides no matter what happens above
         // Keep the splash screen visible for exactly 4 seconds
         setTimeout(async () => {
-          await SplashScreen.hide();
+          try {
+            await SplashScreen.hide();
+          } catch(e) {}
         }, 4000);
-      } catch (e) {
-        // Not running natively (e.g., in a browser), silently ignore
       }
     };
     initNativeApp();
