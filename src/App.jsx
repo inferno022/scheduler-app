@@ -11,6 +11,7 @@ import { getLocalDateStr } from './utils/dateUtils';
 import { useAlarms } from './hooks/useAlarms';
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { SplashScreen } from '@capacitor/splash-screen';
+import startupSoundUrl from '../Task Surge.mp3';
 
 function App() {
   const [activeTab, setActiveTab] = useState('home');
@@ -40,8 +41,18 @@ function App() {
         await StatusBar.setStyle({ style: Style.Dark });
         await StatusBar.setBackgroundColor({ color: '#000000' });
         
-        // Hide the splash screen only AFTER the app has fully rendered to prevent black flashes/glitches
-        await SplashScreen.hide();
+        // Play the custom startup sound
+        try {
+          const audio = new Audio(startupSoundUrl);
+          audio.play();
+        } catch (audioErr) {
+          console.warn('Audio playback prevented by OS', audioErr);
+        }
+
+        // Keep the splash screen visible for exactly 4 seconds
+        setTimeout(async () => {
+          await SplashScreen.hide();
+        }, 4000);
       } catch (e) {
         // Not running natively (e.g., in a browser), silently ignore
       }

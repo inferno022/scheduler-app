@@ -54,9 +54,11 @@ export function useAlarms(tasks) {
   };
 
   useEffect(() => {
-    // Request permission early if not done
-    if (Notification.permission !== "granted" && Notification.permission !== "denied") {
-      Notification.requestPermission();
+    // Request permission early if supported
+    if ('Notification' in window) {
+      if (Notification.permission !== "granted" && Notification.permission !== "denied") {
+        Notification.requestPermission();
+      }
     }
 
     const interval = setInterval(() => {
@@ -87,7 +89,7 @@ export function useAlarms(tasks) {
   }, [tasks]);
 
   const triggerAlarm = (task) => {
-    if (Notification.permission === "granted") {
+    if ('Notification' in window && Notification.permission === "granted") {
       new Notification(`Time for: ${task.title}`, {
         body: `It is ${task.time}.`,
       });
