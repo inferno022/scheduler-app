@@ -1,0 +1,5 @@
+{
+  "appId": "com.scheduler.app",
+  "appName": "scheduler",
+  "webDir": "dist"
+}
